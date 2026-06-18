@@ -1,0 +1,337 @@
+:root {
+  /* Variabili dei colori: cosi' si cambiano facilmente da un solo punto. */
+  --bg: #182119;
+  --panel: #f4efe5;
+  --panel-strong: #fffaf0;
+  --ink: #1a1c1a;
+  --muted: #5f675f;
+  --board-edge: #2b2017;
+  --light-square: #e9cf9f;
+  --dark-square: #7a4f2f;
+  --selected: #3b82f6;
+  --target: #34d399;
+  --capture: #ef4444;
+  --last: #facc15;
+  --white-piece: #f8fafc;
+  --black-piece: #111827;
+}
+
+/* Include bordo e padding dentro le dimensioni degli elementi. */
+* {
+  box-sizing: border-box;
+}
+
+/* Stile generale della pagina. */
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(244, 239, 229, 0.12), transparent 30%),
+    linear-gradient(135deg, #111711, var(--bg));
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Griglia principale: scacchiera a sinistra, pannello a destra. */
+.app-shell {
+  display: grid;
+  grid-template-columns: minmax(340px, 1fr) 320px;
+  gap: 24px;
+  width: min(1180px, calc(100vw - 32px));
+  margin: 0 auto;
+  padding: 24px 0;
+  min-height: 100vh;
+  align-items: center;
+}
+
+/* Aspetto comune dei due blocchi principali. */
+.game-area,
+.side-panel {
+  background: var(--panel);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+}
+
+/* Spazio interno attorno alla scacchiera. */
+.game-area {
+  padding: 22px;
+}
+
+/* Riga superiore con titolo e conteggio pezzi. */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+/* Toglie margini predefiniti del browser da titoli e paragrafi. */
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+/* Titolo principale. */
+h1 {
+  font-size: 34px;
+  line-height: 1;
+}
+
+/* Titoli piccoli del pannello laterale. */
+h2 {
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  margin-bottom: 14px;
+}
+
+/* Testo che dice di chi e' il turno o chi ha vinto. */
+.status {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 16px;
+  min-height: 24px;
+}
+
+/* Contenitore del conteggio pezzi. */
+.score {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* Ogni riquadro del conteggio pezzi. */
+.score span {
+  background: var(--panel-strong);
+  border: 1px solid rgba(42, 31, 22, 0.12);
+  padding: 8px 10px;
+}
+
+/* Scacchiera: 8 colonne uguali, forma quadrata e bordo esterno. */
+.board {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(38px, 1fr));
+  width: min(76vh, 100%);
+  max-width: 720px;
+  aspect-ratio: 1;
+  margin: 0 auto;
+  border: 8px solid var(--board-edge);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.18), 0 18px 36px rgba(0, 0, 0, 0.22);
+}
+
+/* Ogni casella della scacchiera e' un bottone cliccabile. */
+.square {
+  position: relative;
+  border: 0;
+  padding: 0;
+  min-width: 0;
+  min-height: 0;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+/* Casella chiara. */
+.square.light {
+  background: var(--light-square);
+}
+
+/* Casella scura, cioe' quella giocabile nella dama. */
+.square.dark {
+  background: var(--dark-square);
+}
+
+/* Casella con pedina selezionata. */
+.square.selected {
+  background: var(--selected);
+}
+
+/* Casella dove puoi muovere senza catturare. */
+.square.target {
+  background: var(--target);
+}
+
+/* Casella dove puoi arrivare catturando una pedina avversaria. */
+.square.capture-target {
+  background: var(--capture);
+}
+
+/* Evidenzia l'ultima mossa giocata. */
+.square.last {
+  box-shadow: inset 0 0 0 5px var(--last);
+}
+
+/* Quando non e' il tuo turno, le caselle restano visibili ma non cliccabili. */
+.square:disabled {
+  cursor: default;
+}
+
+/* Disco della pedina. */
+.piece {
+  width: 72%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 3px solid rgba(0, 0, 0, 0.42);
+  box-shadow: inset 0 8px 12px rgba(255, 255, 255, 0.32), inset 0 -10px 18px rgba(0, 0, 0, 0.25), 0 5px 9px rgba(0, 0, 0, 0.28);
+  display: grid;
+  place-items: center;
+}
+
+/* Pedina bianca. */
+.piece.white {
+  background: var(--white-piece);
+}
+
+/* Pedina nera. */
+.piece.black {
+  background: var(--black-piece);
+  border-color: rgba(255, 255, 255, 0.58);
+}
+
+/* Lettera D sopra una dama. */
+.piece.king::after {
+  content: "D";
+  font-weight: 900;
+  font-size: clamp(16px, 4vw, 32px);
+  color: #111827;
+}
+
+/* Lettera D chiara quando la dama e' nera. */
+.piece.black.king::after {
+  color: #f8fafc;
+}
+
+/* Pannello laterale con controlli e cronologia. */
+.side-panel {
+  align-self: stretch;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Singolo blocco del pannello laterale. */
+.panel-section {
+  background: var(--panel-strong);
+  border: 1px solid rgba(42, 31, 22, 0.12);
+  padding: 16px;
+}
+
+/* Riga formata da etichetta e menu. */
+.control-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+
+/* Testo sopra i menu. */
+label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Menu e bottoni usano lo stesso font della pagina. */
+select,
+button {
+  font: inherit;
+}
+
+/* Aspetto dei menu a tendina. */
+select {
+  width: 100%;
+  border: 1px solid rgba(42, 31, 22, 0.24);
+  background: #fff;
+  padding: 10px 11px;
+  color: var(--ink);
+}
+
+/* Bottone principale "Nuova partita". */
+.primary-button {
+  width: 100%;
+  border: 0;
+  background: #1f6f43;
+  color: #fff;
+  padding: 12px 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* Colore del bottone quando ci passi sopra con il mouse. */
+.primary-button:hover {
+  background: #185b36;
+}
+
+/* Messaggio che spiega cosa fare nella mossa corrente. */
+.move-help {
+  color: var(--muted);
+  line-height: 1.45;
+  min-height: 64px;
+}
+
+/* La sezione cronologia occupa lo spazio rimasto. */
+.log-section {
+  flex: 1;
+  min-height: 180px;
+}
+
+/* Lista delle mosse, con scorrimento se diventa lunga. */
+.move-log {
+  margin: 0;
+  padding-left: 24px;
+  max-height: 360px;
+  overflow: auto;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* Su schermi medi il pannello va sotto la scacchiera. */
+@media (max-width: 900px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .side-panel {
+    align-self: auto;
+  }
+}
+
+/* Su schermi piccoli si riducono margini e bordo della scacchiera. */
+@media (max-width: 560px) {
+  .app-shell {
+    width: 100%;
+    padding: 0;
+    gap: 0;
+  }
+
+  .game-area,
+  .side-panel {
+    border-left: 0;
+    border-right: 0;
+    box-shadow: none;
+  }
+
+  .game-area {
+    padding: 14px;
+  }
+
+  .topbar {
+    display: block;
+  }
+
+  .score {
+    justify-content: flex-start;
+    margin-top: 14px;
+  }
+
+  .board {
+    width: 100%;
+    border-width: 5px;
+  }
+}

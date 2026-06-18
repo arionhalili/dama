@@ -1,0 +1,7 @@
+numpy
+opencv-python
+gymnasium
+stable-baselines3
+matplotlib
+ipywidgets
+notebook

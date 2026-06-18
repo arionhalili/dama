@@ -1,0 +1,98 @@
+<!doctype html>
+<!--
+  Questo file e' la pagina principale del videogioco.
+  HTML definisce "cosa esiste" nella pagina: scacchiera, bottoni, menu e testi.
+  La grafica sta in styles.css, mentre la logica del gioco sta in game.js.
+-->
+<html lang="it">
+<head>
+  <!-- Imposta la codifica dei caratteri, cosi' lettere e accenti funzionano bene. -->
+  <meta charset="utf-8">
+
+  <!-- Rende la pagina adattabile anche a schermi piccoli, per esempio tablet o telefono. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Titolo che compare nella scheda del browser. -->
+  <title>Dama - Gioca contro la macchina</title>
+
+  <!-- Collega il file CSS che contiene colori, dimensioni e layout. -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Contenitore generale: a sinistra c'e' il gioco, a destra i controlli. -->
+  <main class="app-shell">
+
+    <!-- Area principale della partita. -->
+    <section class="game-area" aria-label="Partita di dama">
+
+      <!-- Barra superiore con titolo, stato della partita e conteggio dei pezzi. -->
+      <div class="topbar">
+        <div>
+          <h1>Dama</h1>
+
+          <!-- game.js aggiorna questo testo a ogni turno. -->
+          <p id="status" class="status">Tocca al bianco.</p>
+        </div>
+
+        <!-- game.js aggiorna questi numeri contando i pezzi rimasti. -->
+        <div class="score" aria-label="Punteggio pezzi">
+          <span><b id="white-count">12</b> Bianchi</span>
+          <span><b id="black-count">12</b> Neri</span>
+        </div>
+      </div>
+
+      <!--
+        Qui game.js crea automaticamente le 64 caselle.
+        All'inizio e' vuoto perche' viene riempito dal codice JavaScript.
+      -->
+      <div id="board" class="board" aria-label="Scacchiera" role="grid"></div>
+    </section>
+
+    <!-- Pannello laterale con opzioni, messaggi e cronologia delle mosse. -->
+    <aside class="side-panel" aria-label="Controlli partita">
+
+      <!-- Sezione per impostare e ricominciare la partita. -->
+      <div class="panel-section">
+        <h2>Partita</h2>
+
+        <!-- Menu per scegliere se il giocatore umano usa bianco o nero. -->
+        <div class="control-row">
+          <label for="human-side">Tu giochi</label>
+          <select id="human-side">
+            <option value="white">Bianco</option>
+            <option value="black">Nero</option>
+          </select>
+        </div>
+
+        <!-- Menu per scegliere quanto deve pensare la macchina. -->
+        <div class="control-row">
+          <label for="difficulty">Macchina</label>
+          <select id="difficulty">
+            <option value="2">Facile</option>
+            <option value="4" selected>Media</option>
+            <option value="6">Difficile</option>
+          </select>
+        </div>
+
+        <!-- Bottone che azzera tutto e crea una nuova partita. -->
+        <button id="new-game" class="primary-button" type="button">Nuova partita</button>
+      </div>
+
+      <!-- Sezione dove game.js spiega quale azione puoi fare adesso. -->
+      <div class="panel-section">
+        <h2>Mossa</h2>
+        <p id="move-help" class="move-help">Clicca una tua pedina per vedere le mosse disponibili.</p>
+      </div>
+
+      <!-- Lista delle mosse giocate durante la partita. -->
+      <div class="panel-section log-section">
+        <h2>Cronologia</h2>
+        <ol id="move-log" class="move-log"></ol>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Carica il file JavaScript che fa funzionare il gioco. -->
+  <script src="game.js"></script>
+</body>
+</html>
